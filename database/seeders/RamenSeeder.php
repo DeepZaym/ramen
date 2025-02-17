@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class MahasiswaSeeder extends Seeder
+class RamenSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,7 +22,7 @@ class MahasiswaSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'ramen_id' => '12345678',
+                'ramen_id' => '002',
                 'ramen_nama' => 'Ramen Curry',
                 'ramen_deskripsi' => 'Ramen curry berkuah kental dengan aroma kuat, bumbu kari, daging, bawang, dan kentang.',
                 'ramen_harga' => 'Rp. 20.000',
@@ -30,7 +30,7 @@ class MahasiswaSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'ramen_id' => '12345678',
+                'ramen_id' => '003',
                 'ramen_nama' => 'Ramen Tantanmen',
                 'ramen_deskripsi' => 'Ramen tantanmen berkuah pedas dengan saus wijen, pasta cabai, kecap, daging, dan sayuran.',
                 'ramen_harga' => 'Rp. 30.000',   
