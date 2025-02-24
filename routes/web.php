@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RamenController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,3 +20,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 Route::get('/ramen', [RamenController::class, 'index']);
+Route::get('/ramen/create', [RamenController::class, 'create']);
+Route::post('/ramen',  [RamenController::class, 'store']);
+Route::get('ramen/{id}/edit', [RamenController::class, 'edit']);
+Route::patch('ramen/{id}', [RamenController::class, 'update']);
+Route::delete('ramen/{id}', [RamenController::class, 'destroy']);
