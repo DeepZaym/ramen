@@ -6,7 +6,7 @@
     <title>Registrasi Pengguna</title>
 </head>
 <body>
-    <div class="text-center">
+    <div>
         <h2>Registrasi Pengguna</h2>
         <p>Silahkan isi formulir berikut untuk registrasi</p>
         <form action="{{ route('registrasi.submit') }}" method="post">
@@ -19,7 +19,7 @@
 
             <label>Password</label>
             <input type="password" name="password" required>
-            <button class="btn btn primary">Submit Registrasi</button>
+            <button>Submit Registrasi</button>
         </form>
     </div>
 </body>

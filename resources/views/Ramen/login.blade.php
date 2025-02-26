@@ -6,7 +6,7 @@
     <title>Login Pengguna</title>
 </head>
 <body>
-    <div class="text-center">
+    <div>
         <h2>Login Pengguna</h2>
         <p>Silahkan masuk dengan menggunakan akun yang sudah anda daftarkan</p>
         <form action="{{ route('login.submit') }}" method="post">
@@ -16,11 +16,11 @@
 
             <label>Password</label>
             <input type="password" name="password" required>
-            <button class="btn btn primary">Submit Login</button>
+            <button>Submit Login</button>
         </form>
 
         @if(session('gagal'))
-        <p class="text-danger">{{ session('gagal') }}</p>
+        <p>{{ session('gagal') }}</p>
         @endif
     </div>
 </body>
