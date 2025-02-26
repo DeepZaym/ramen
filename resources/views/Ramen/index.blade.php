@@ -1,7 +1,17 @@
 @extends('layouts.app') 
 
 @section('content') 
-
+<div>
+    @if(Auth::check())
+        <b>Halo {{ Auth::user()->name }}, Anda berhasil Login</b>
+    @endif
+    <form action="{{ route('logout') }}" method="post">
+        @csrf
+        <button>Logout</button> 
+    </form>
+</div>
+    
+    
 <div class="container"> 
     <h3>Daftar Ramen</h3>
     <h3><a href="{{ url('ramen/create') }}">Tambah Data</a></h3> 
