@@ -25,6 +25,13 @@
                 <td>Harga</td>
                 <td><input type="text" name="ramen_harga" value="{{ $row->ramen_harga }}"></td>
             </tr>
+            <td>
+                <td>Status</td>
+                <select name="status">
+                    <option value="tersedia" {{ $row->status == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                    <option value="habis" {{ $row->status == 'habis' ? 'selected' : '' }}>Habis</option>
+                </select>
+            </td>  
             <tr>
                 <td></td>
                 <td><input type="submit" value="UPDATE"></td>

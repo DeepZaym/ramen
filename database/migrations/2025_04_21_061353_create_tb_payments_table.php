@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tb_ramen', function (Blueprint $table) {
-            $table->increments('ramen_id'); 
-            $table->string('ramen_nama');
-            $table->string('ramen_deskripsi');
-            $table->string('ramen_harga');
+        Schema::create('tb_payments', function (Blueprint $table) {
+            $table->increments('payments_id');
+            $table->foreignId('orders_id');
+            $table->enum('metode_pembayaran', ['gopay', 'ovo', 'dana', 'bank_transfer', 'cod']);
+            $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tb_ramen');
+        Schema::dropIfExists('tb_payments');
     }
 };

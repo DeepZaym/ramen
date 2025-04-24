@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RamenController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,8 +25,8 @@ require __DIR__.'/auth.php';
 Route::get('/registrasi', [AuthController::class, 'tampilRegistrasi'])->name('registrasi.tampil');
 Route::post('/registrasi/submit', [AuthController::class, 'submitRegistrasi'])->name('registrasi.submit');
 
-Route::get('/login', [AuthController::class, 'tampilLogin'])->name('login');
-Route::post('/login/submit', [AuthController::class, 'submitLogin'])->name('login.submit');
+Route::get('/logins', [AuthController::class, 'tampilLogin'])->name('login');
+Route::post('/logins/submit', [AuthController::class, 'submitLogin'])->name('login.submit');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -36,6 +37,12 @@ Route::middleware('auth')->group(function() {
     Route::post('/ramen',  [RamenController::class, 'store']);
     Route::get('ramen/{id}/edit', [RamenController::class, 'edit']);
     Route::patch('ramen/{id}', [RamenController::class, 'update']);
+    Route::get('ramen/status/{id}', [RamenController::class, 'updateStatus'])
+     ->name('ramen.updateStatus');
     Route::delete('ramen/{id}', [RamenController::class, 'destroy']);
 
 });
+
+Route::get('/', [UserController::class, 'landingPage'])->name('home');
+Route::get('/order', [UserController::class, 'orderPage'])->name('order');
+Route::post('/order', [UserController::class, 'placeOrder'])->name('order.submit');

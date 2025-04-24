@@ -22,6 +22,13 @@
                 <td>HARGA</td>
                 <td><input type="text" name="ramen_harga"></td>
             </tr>
+            <td>
+                <td>Status</td>
+                <select name="status">
+                    <option value="tersedia">Tersedia</option>
+                    <option value="habis">Habis</option>
+                </select>
+            </td>  
             <tr>
                 <td><td>
                 <td>

@@ -29,6 +29,12 @@
             <td>{{ $row->ramen_nama }}</td> 
             <td>{{ $row->ramen_deskripsi }}</td> 
             <td>{{ $row->ramen_harga }}</td>
+            <label>Status:</label>
+            <td>
+                <span class="{{ $row->status == 'tersedia' ? 'text-success' : 'text-danger' }}">
+                    {{ ucfirst($row->status) }}
+                </span>
+            </td>
             <td><a href="{{ url('ramen/' . $row->ramen_id . '/edit') }}">Edit</a></td>
             <form action="{{ url('ramen/' . $row->ramen_id) }}" method="POST">
                 <input name="_method" type="hidden" value="DELETE"> 
