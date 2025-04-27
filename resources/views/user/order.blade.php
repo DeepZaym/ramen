@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1>Pesan Ramen</h1>
+    <h1>Pesan menu</h1>
     <form action="{{ route('order.submit') }}" method="POST">
         @csrf
 
@@ -12,10 +12,10 @@
         </div>
 
         <div class="mb-3">
-            <label for="ramen_id" class="form-label">Pilih Ramen</label>
-            <select class="form-control" name="ramen_id">
-                @foreach(App\Models\Ramen::all() as $ramen)
-                    <option value="{{ $ramen->ramen_id }}">{{ $ramen->ramen_nama }}</option>
+            <label for="menu_id" class="form-label">Pilih Menu</label>
+            <select class="form-control" name="menu_id">
+                @foreach(App\Models\menu::all() as $menu)
+                    <option value="{{ $menu->menu_id }}">{{ $menu->menu_nama }}</option>
                 @endforeach
             </select>
         </div>
