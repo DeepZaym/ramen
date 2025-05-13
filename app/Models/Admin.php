@@ -1,26 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
+namespace App\Models;
 
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class AdminController extends Controller
+class Admin extends Authenticatable
 {
-    // Menampilkan Dashboard Admin
-    public function dashboard()
-    {
-        return view('admin.dashboard');
-    }
+    use Notifiable;
 
-    // Menampilkan halaman login
-    public function login()
-    {
-        return view('auth.login');
-    }
+    protected $table = 'admin';
 
-    // Menampilkan halaman profile admin
-    public function profile()
-    {
-        return view('admin.profile');
-    }
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 }

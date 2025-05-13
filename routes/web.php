@@ -25,7 +25,7 @@ Route::post('/order', [UsersController::class, 'placeOrder'])->name('order.submi
 // -------------------
 
 // Admin Dashboard (akses: /admin)
-Route::get('/admin', [AdminController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('admin.dashboard');
+Route::get('/admin', [AdminController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.index');
 
 // Halaman Login (diakses jika belum login)
 Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');

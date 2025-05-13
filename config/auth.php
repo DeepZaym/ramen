@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Http;
+
 return [
 
     /*
@@ -60,10 +63,10 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => \App\Models\Admin::class, // ganti ke model kamu 
+    ],
 
         // 'users' => [
         //     'driver' => 'database',
