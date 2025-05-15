@@ -9,8 +9,8 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $rows = Menu::all(); // ambil semua data dari tabel tb_menu
-        return view('admin.index', compact('rows'));
+        $menu = Menu::all(); // ambil semua data dari tabel tb_menu
+        return view('admin.index', compact('menu'));
     }
 
     public function login()
@@ -24,4 +24,20 @@ class AdminController extends Controller
         // Menampilkan profil admin
         return view('admin.profile'); // pastikan file ini ada
     }
+
+    public function create()
+    {
+        return view('admin.admin-acc.create');
+    }
+
+    public function store(Request $request)
+    {
+    $request->validate([
+        'nama' => 'required|string|max:100',
+        'email' => 'required|nullable|string',
+        'password' => 'required|string|min:5',
+    ]);
+    }
+
+    
 }

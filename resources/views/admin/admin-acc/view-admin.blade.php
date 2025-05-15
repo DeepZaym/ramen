@@ -1,4 +1,3 @@
-<!-- resources/views/admin/index.blade.php -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +21,7 @@
     </nav>
 
     <div class="container mt-5">
-        <h2>Daftar Menu</h2>
+        <h2>Admin Account</h2>
         <a href="{{ route('menu.create') }}">Tambah Menu</a>
         <table class="table table-bordered">
             <thead class="table-dark">

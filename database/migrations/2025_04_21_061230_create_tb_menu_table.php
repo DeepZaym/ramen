@@ -6,17 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('tb_menu', function (Blueprint $table) {
             $table->increments('menu_id'); 
-            $table->string('menu_nama');
-            $table->string('menu_deskripsi');
-            $table->decimal('menu_harga');
+            $table->string('menu_nama', 100);
+            $table->text('menu_deskripsi')->nullable();
+            $table->integer('menu_harga')->unsigned(); // Harga dalam rupiah (tanpa koma)
             $table->enum('status', ['tersedia', 'habis'])->default('tersedia');
+            $table->unsignedInteger('stok')->default(0);
             $table->timestamps();
         });
     }
@@ -25,8 +23,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('tb_menu');
     }
-
-    /**
-     * Reverse the migrations.
-     */
 };

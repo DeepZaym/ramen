@@ -7,6 +7,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CreateController;
+
 
 // -------------------
 // ROUTE USER
@@ -39,7 +41,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     // Menu Admin: Menu
     Route::resource('/menu', MenuController::class);
 
-    // Route lainnya sesuai kebutuhan
+    // crud route
+
+    Route::post('/menu/{id}/stok', [MenuController::class, 'updateStok'])->name('menu.stok.update');
+    Route::post('/menu/{id}/order', [MenuController::class, 'order'])->name('menu.order');
+    Route::resource('menu', MenuController::class);
+
 });
 
 // -------------------
@@ -61,3 +68,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // AUTH DEFAULT (dari breeze/jetstream)
 // -------------------
 require __DIR__.'/auth.php';
+
+
+

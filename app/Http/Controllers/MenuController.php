@@ -12,62 +12,70 @@ class MenuController extends Controller
      */
     public function index()
     {
-        $menus = Menu::latest()->get();
-        return response()->json($menus);
+        $menu = Menu::all();
+        return view('admin.index', compact('menu'));
+    }
+
+    /**
+     * Tampilkan form tambah menu.
+     */
+    public function create()
+    {
+        return view('admin.menu.create');
     }
 
     /**
      * Simpan menu baru.
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'deskripsi' => 'nullable|string',
-            'harga' => 'required|numeric|min:0',
-            'kategori' => 'required|string|max:50',
-            'gambar' => 'nullable|string', // base64 atau URL jika ada
-        ]);
+    $request->validate([
+        'menu_nama' => 'required|string|max:100',
+        'menu_deskripsi' => 'nullable|string',
+        'menu_harga' => 'required|numeric|min:0',
+        'stok' => 'required|integer|min:0',
+    ]);
 
-        $menu = Menu::create($request->all());
+    $data = $request->all();
+    $data['status'] = $data['stok'] > 0 ? 1 : 0;
 
-        return response()->json([
-            'message' => 'Menu berhasil ditambahkan',
-            'data' => $menu
-        ], 201);
+    Menu::create($data);
+
+    return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan');
     }
 
+
     /**
-     * Tampilkan satu menu berdasarkan ID.
+     * Tampilkan form edit.
      */
-    public function show($id)
+    public function edit($id)
     {
         $menu = Menu::findOrFail($id);
-        return response()->json($menu);
+        return view('admin.menu.edit', compact('menu'));
     }
 
     /**
      * Update menu berdasarkan ID.
      */
     public function update(Request $request, $id)
-    {
-        $menu = Menu::findOrFail($id);
+{
+    $menu = Menu::findOrFail($id);
 
-        $request->validate([
-            'nama' => 'sometimes|required|string|max:100',
-            'deskripsi' => 'nullable|string',
-            'harga' => 'sometimes|required|numeric|min:0',
-            'kategori' => 'sometimes|required|string|max:50',
-            'gambar' => 'nullable|string',
-        ]);
+    $request->validate([
+        'menu_nama' => 'required|string|max:100',
+        'menu_deskripsi' => 'nullable|string',
+        'menu_harga' => 'required|numeric|min:0',
+        'stok' => 'required|integer|min:0',
+    ]);
 
-        $menu->update($request->all());
+    $data = $request->only(['menu_nama', 'menu_deskripsi', 'menu_harga', 'stok']);
+    $data['status'] = $data['stok'] > 0 ? 'tersedia' : 'habis';
 
-        return response()->json([
-            'message' => 'Menu berhasil diperbarui',
-            'data' => $menu
-        ]);
-    }
+    $menu->update($data);
+
+    return redirect()->route('menu.index')->with('success', 'Menu berhasil diperbarui');
+}
+
 
     /**
      * Hapus menu berdasarkan ID.
@@ -77,8 +85,43 @@ class MenuController extends Controller
         $menu = Menu::findOrFail($id);
         $menu->delete();
 
-        return response()->json([
-            'message' => 'Menu berhasil dihapus'
+        return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus');
+    }
+    // Update stok dan status otomatis saat menyimpan menu
+    public function updateStok(Request $request, $id)
+    {
+        $menu = Menu::findOrFail($id);
+
+        $request->validate([
+            'stok' => 'required|integer|min:0',
         ]);
+
+        $menu->stok = $request->stok;
+        $menu->status = $menu->stok > 0 ? 1 : 0;
+        $menu->save();
+
+        return redirect()->route('menu.index')->with('success', 'Stok dan status diperbarui.');
+    }
+
+    // Simulasi pemesanan
+    public function order(Request $request, $id)
+    {
+        $menu = Menu::findOrFail($id);
+
+        $request->validate([
+            'jumlah' => 'required|integer|min:1',
+        ]);
+
+        if ($menu->stok < $request->jumlah) {
+            return back()->with('error', 'Stok tidak mencukupi.');
+        }
+
+        $menu->stok -= $request->jumlah;
+        $menu->status = $menu->stok > 0 ? 1 : 0;
+        $menu->save();
+
+        return back()->with('success', 'Pesanan berhasil, stok diperbarui.');
     }
 }
+
+
