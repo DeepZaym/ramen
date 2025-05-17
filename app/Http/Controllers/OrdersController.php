@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
 use App\Models\OrdersItem;
 use App\Models\Orders;
 use App\Models\Orders_Item;
+use App\Models\Users;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -14,8 +16,8 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $orders = Orders::with('users', 'ordersItems.menu')->latest()->get();
-        return response()->json($orders);
+        $orders = Orders::with('user')->latest()->get();
+        return view('admin.orders.view-orders', compact('orders'));
     }
 
     /**
@@ -27,7 +29,7 @@ class OrdersController extends Controller
             'users_id' => 'required|exists:users,id',
             'delivery_address' => 'required|string',
             'items' => 'required|array',
-            'items.*.menu_id' => 'required|exists:menus,id',
+            'items.*.menu_id' => 'required|exists:menu,id',
             'items.*.quantity' => 'required|integer|min:1',
         ]);
 
@@ -67,8 +69,8 @@ class OrdersController extends Controller
      */
     public function show($id)
     {
-        $order = Orders::with('users', 'orders_Items.menu')->findOrFail($id);
-        return response()->json($order);
+        $orders = Orders::with('users', 'orders_Items.menu')->findOrFail($id);
+        return response()->json($orders);
     }
 
     /**
@@ -80,14 +82,29 @@ class OrdersController extends Controller
             'status' => 'required|in:pending,preparing,on_delivery,delivered,cancelled',
         ]);
 
-        $order = Orders::findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
+        $orders = Orders::findOrFail($id);
+        $orders->status = $request->status;
+        $orders->save();
 
         return response()->json([
             'message' => 'Status pesanan diperbarui',
-            'data' => $order
+            'data' => $orders
         ]);
+    }
+
+    public function create()
+    {
+        $menu = Menu::where('status', 1)->get(); // hanya menu yang tersedia
+        $users = Users::all();
+        return view('admin.orders.create', compact('menu', 'users'));
+    }
+
+    public function edit($id)
+    {
+        $orders = Orders::with('ordersItems')->findOrFail($id);
+        $menu = Menu::where('status', 1)->get();
+        $users = Users::all();
+        return view('admin.orders.edit', compact('orders', 'menu', 'users'));
     }
 
     /**
@@ -95,10 +112,11 @@ class OrdersController extends Controller
      */
     public function destroy($id)
     {
-        $order = Orders::findOrFail($id);
-        $order->orderItems()->delete();
-        $order->delete();
+        $orders = Orders::findOrFail($id);
+        $orders->orderItems()->delete();
+        $orders->delete();
 
-        return response()->json(['message' => 'Pesanan berhasil dihapus']);
+        return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dihapus');
+
     }
 }

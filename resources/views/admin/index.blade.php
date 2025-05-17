@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.index') }}">Menu</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/orders') }}">Orders</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('orders.index') }}">Orders</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url('/admin/order-items') }}">Order Items</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url('/admin/payments') }}">Payments</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url('/admin/reviews') }}">Reviews</a></li>
@@ -48,7 +48,7 @@
                             </span>
                         </td>
                         <td>
-                            <a href="{{ route('menu.edit', $row->menu_id) }}">Edit</a> |
+                            <a href="{{ route('menu.edit', $row->menu_id) }}">Edit</a>
                             <form action="{{ route('menu.destroy', $row->menu_id) }}" method="POST" style="display:inline">
                                     @csrf
                                     @method('DELETE')

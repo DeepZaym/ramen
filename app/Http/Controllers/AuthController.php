@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ramen;
 use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -14,7 +15,7 @@ class AuthController extends Controller
     }
 
     function submitRegistrasi(Request $request) {
-        $user = new User();
+        $user = new AuthUser();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);

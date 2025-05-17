@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tb_payments', function (Blueprint $table) {
             $table->increments('payments_id');
-            $table->foreignId('orders_id');
+            $table->foreignId('orders_id')->constrained('tb_orders')->onDelete('cascade');
             $table->enum('metode_pembayaran', ['gopay', 'ovo', 'dana', 'bank_transfer', 'cod']);
             $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
             $table->timestamps();
