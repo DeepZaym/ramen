@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
+    <title>Admin Management</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -10,53 +10,62 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.index') }}">Menu</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/orders') }}">Orders</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/order-items') }}">Order Items</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/payments') }}">Payments</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/reviews') }}">Reviews</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/users') }}">Users</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/admin-acc') }}">Admin</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('orders.index') }}">Orders</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('items.index') }}">Order Items</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('payments.index') }}">Payments</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('reviews.index') }}">Reviews</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.users.index') }}">Users</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ route('admin.admin-acc') }}">Admin</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="container mt-5">
-        <h2>Admin Account</h2>
-        <a href="{{ route('menu.create') }}">Tambah Menu</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Data Admin</h2>
+            <a href="{{ route('admin.create-admin') }}" class="btn btn-primary">Tambah Admin</a>
+        </div>
+
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Nama</th>
-                    <th>Deskripsi</th>
-                    <th>Harga</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>Email</th>
+                    <th>Email Verified</th>
+                    <th>Dibuat</th>
+                    <th>Diubah</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($menu as $id => $row)
+                @foreach($admins as $index => $admin)
                     <tr>
-                        <td>{{ $id +1 }}</td>
-                        <td>{{ $row->menu_nama }}</td>
-                        <td>{{ $row->menu_deskripsi }}</td>
-                        <td>Rp{{ number_format($row->menu_harga, 0, ',', '.') }}</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $admin->nama ?? $admin->name }}</td>
+                        <td>{{ $admin->email }}</td>
+                        <td>{{ $admin->email_verified_at ?? '-' }}</td>
+                        <td>{{ $admin->created_at }}</td>
+                        <td>{{ $admin->updated_at }}</td>
                         <td>
-                            <span class="{{ $row->status == 'tersedia' ? 'text-success' : 'text-danger' }}">
-                                {{ ucfirst($row->status) }}
-                            </span>
-                        </td>
-                        <td>
-                            <a href="{{ route('menu.edit', $row->menu_id) }}">Edit</a> |
-                            <form action="{{ route('menu.destroy', $row->menu_id) }}" method="POST" style="display:inline">
-                                    @csrf
-                                    @method('DELETE')
-                                <button type="submit" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                            <a href="{{ route('admin.edit-admin', $admin->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="{{ route('admin.delete-admin', $admin->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus admin ini?')">Hapus</button>
                             </form>
-
                         </td>
                     </tr>
                 @endforeach
+                @if($admins->isEmpty())
+                    <tr>
+                        <td colspan="7" class="text-center">Belum ada data admin.</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
     </div>

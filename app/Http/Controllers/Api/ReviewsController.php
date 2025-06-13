@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Reviews;
 use App\Models\Users;
 use App\Models\Menu;
-
 use Illuminate\Http\Request;
 
 class ReviewsController extends Controller
@@ -15,8 +15,8 @@ class ReviewsController extends Controller
      */
     public function index()
     {
-        $reviews = Reviews::with('user', 'menu')->latest()->get();
-        return view('admin.reviews.view-reviews', compact('reviews'));
+        $Reviews = Reviews::with('users', 'menu')->latest()->get();
+        return response()->json($Reviews);
     }
 
     /**
@@ -25,13 +25,13 @@ class ReviewsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'users_id' => 'required|exists:users,id',
-            'menu_id' => 'required|exists:menu,id',
+            'users_id' => 'required|exists:tb_users,users_id',
+            'menu_id' => 'required|exists:tb_menu,menu_id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:500',
         ]);
 
-        $reviews = Reviews::create([
+        $Reviews = Reviews::create([
             'users_id' => $request->users_id,
             'menu_id' => $request->menu_id,
             'rating' => $request->rating,
@@ -40,7 +40,7 @@ class ReviewsController extends Controller
 
         return response()->json([
             'message' => 'Review berhasil ditambahkan',
-            'data' => $reviews
+            'data' => $Reviews
         ], 201);
     }
 
@@ -49,8 +49,8 @@ class ReviewsController extends Controller
      */
     public function show($id)
     {
-        $reviews = Reviews::with('user', 'menu')->findOrFail($id);
-        return response()->json($reviews);
+        $Reviews = Reviews::with('user', 'menu')->findOrFail($id);
+        return response()->json($Reviews);
     }
 
     /**
@@ -58,21 +58,21 @@ class ReviewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $reviews = Reviews::findOrFail($id);
+        $Reviews = Reviews::findOrFail($id);
 
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:500',
         ]);
 
-        $reviews->update([
+        $Reviews->update([
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
 
         return response()->json([
             'message' => 'Review diperbarui',
-            'data' => $reviews
+            'data' => $Reviews
         ]);
     }
 
@@ -81,8 +81,8 @@ class ReviewsController extends Controller
      */
     public function destroy($id)
     {
-        $reviews = Reviews::findOrFail($id);
-        $reviews->delete();
+        $Reviews = Reviews::findOrFail($id);
+        $Reviews->delete();
 
         return response()->json(['message' => 'Review berhasil dihapus']);
     }

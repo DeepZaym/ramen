@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\App;
+
 use Illuminate\Support\Facades\Http;
 
 return [
@@ -41,7 +42,12 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'admins', // For admin authentication
+        ],
+
+        'customers' => [
+            'driver' => 'session',
+            'provider' => 'customers', // For customer authentication
         ],
     ],
 
@@ -63,15 +69,15 @@ return [
     */
 
     'providers' => [
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => \App\Models\Admin::class, // ganti ke model kamu 
-    ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Admin::class, // Admin model
+        ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Users::class, // Users model
+        ],
     ],
 
     /*
@@ -95,12 +101,46 @@ return [
 
     'passwords' => [
         'users' => [
-            'provider' => 'users',
+            'provider' => 'customers',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        
+        'admins' => [
+            'provider' => 'admins',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
+
+    'guards' => [
+    // Guard default Laravel
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+
+    // Tambahkan ini untuk guard tb_users
+    'customers' => [
+        'driver' => 'session',
+        'provider' => 'tb_users',
+    ],
+],
+
+'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => \App\Models\Users::class,
+    ],
+
+    // Tambahkan ini untuk provider tb_users
+    'tb_users' => [
+        'driver' => 'eloquent',
+        'model' => \App\Models\Users::class,
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------

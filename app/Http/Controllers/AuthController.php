@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Ramen;
-use App\Models\User;
+use App\Models\Users;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,11 +15,11 @@ class AuthController extends Controller
     }
 
     function submitRegistrasi(Request $request) {
-        $user = new AuthUser();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
+        $users = new AuthUser();
+        $users->name = $request->name;
+        $users->email = $request->email;
+        $users->password = bcrypt($request->password);
+        $users->save();
         return redirect()->route('login');
 
     }

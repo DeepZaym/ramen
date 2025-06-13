@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 
@@ -18,25 +19,72 @@ class AdminController extends Controller
         // Menampilkan form login admin (jika perlu halaman khusus)
         return view('auth.login'); // atau sesuaikan dengan file login kamu
     }
-
-    public function profile()
+  // Tampilkan semua data admin
+    public function adminAcc()
     {
-        // Menampilkan profil admin
-        return view('admin.profile'); // pastikan file ini ada
+        $admins = Admin::all();
+        return view('admin.admin-acc.view-admin', compact('admins'));
     }
 
-    public function create()
+    // Tampilkan form tambah admin
+    public function createAdmin()
     {
         return view('admin.admin-acc.create');
     }
 
-    public function store(Request $request)
+    // Simpan admin baru
+    public function storeAdmin(Request $request)
     {
-    $request->validate([
-        'nama' => 'required|string|max:100',
-        'email' => 'required|nullable|string',
-        'password' => 'required|string|min:5',
-    ]);
+        $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:admin,email',
+        'password' => 'required|min:7',
+        ]);
+
+        Admin::create([
+            'name' => $validated['name'],
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        return redirect()->route('admin.admin-acc')->with('success', 'Admin berhasil ditambahkan!');
+    }
+
+    // Tampilkan form edit admin
+    public function editAdmin($id)
+    {
+        $admin = Admin::findOrFail($id);
+        return view('admin.admin-acc.edit', compact('admin'));
+    }
+
+    // Simpan perubahan admin
+    public function updateAdmin(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:admin,email,' . $id,
+            'password' => 'nullable|string|min:7',
+        ]);
+
+        $admin = Admin::findOrFail($id);
+
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+        if ($request->filled('password')) {
+            $admin->password = bcrypt($request->password);
+        }
+        $admin->save();
+
+        return redirect()->route('admin.admin-acc')->with('success', 'Admin berhasil diperbarui!');
+    }
+
+    // Hapus admin
+    public function deleteAdmin($id)
+    {
+        $admin = Admin::findOrFail($id);
+        $admin->delete();
+
+        return redirect()->route('admin.admin-acc')->with('success', 'Admin berhasil dihapus!');
     }
 
     

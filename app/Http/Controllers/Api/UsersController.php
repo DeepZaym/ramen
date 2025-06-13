@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Session;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
-use function Laravel\Prompts\alert;
 
 class UsersController extends Controller
 {
@@ -44,53 +41,28 @@ class UsersController extends Controller
             'password' => 'required',
         ]);
 
-        // Manual authentication untuk Users model
+        // Manual authentication for custom Users model
         $user = Users::where('users_nama', $request->username)->first();
 
         if ($user && Hash::check($request->password, $user->users_password)) {
-            // Login user menggunakan guard customers
-            Auth::guard('customers')->login($user);
+            // Log the user in manually
+            Auth::guard('users')->login($user);
             $request->session()->regenerate();
             return redirect()->route('landing')->with('success', 'Login berhasil');
         }
 
-        // return back()->with('gagal', 'Username atau password salah');
-        return view("errorhandling");
-
+        return back()->with('gagal', 'Username atau password salah');
     }
 
     public function landing() {
-    if (Auth::guard('customers')->check()) {
-        $user = Auth::guard('customers')->user();
-
-        $tb_users = Session::get('tb_users');
-        if (!$tb_users) {
-            $tb_users = [
-                'users_id' => $user->users_id,
-                'users_nama' => $user->users_nama,
-                'users_email' => $user->users_email,
-                'users_alamat' => $user->users_alamat,
-            ];
-            Session::put('tb_users', $tb_users);
-        }
-
-        return view('users.landing', [
-            'users_nama' => $user->users_nama,
-            'users_email' => $user->users_email,
-            'users_alamat' => $user->users_alamat,
-            'tb_users' => $tb_users,
-        ]);
+        return view('users.landing');
     }
-
-    return redirect()->route('loginForm')->with('gagal', 'Silakan login terlebih dahulu.');
-    }
-
 
     public function logout(Request $request) {
-        Auth::guard('customers')->logout();
+        Auth::guard('users')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('loginForm')->with('success', 'Logout berhasil');
+        return redirect()->route('loginForm');
     }
 
     // Menu method
@@ -103,7 +75,7 @@ class UsersController extends Controller
         return view('users.pembayaran');
     }
 
-    // CRUD methods untuk admin panel
+    // CRUD methods for admin
     public function index() {
         $users = Users::all();
         return view('admin.users.index', compact('users'));
@@ -138,7 +110,7 @@ class UsersController extends Controller
 
     public function update(Request $request, $id) {
         $user = Users::findOrFail($id);
-
+        
         $request->validate([
             'users_nama' => 'required|string|max:255|unique:tb_users,users_nama,' . $id . ',users_id',
             'users_email' => 'required|email|unique:tb_users,users_email,' . $id . ',users_id',

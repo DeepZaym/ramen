@@ -10,13 +10,13 @@
         <a class="navbar-brand" href="#">Admin Panel</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{{ route('admin.index') }}">Menu</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ route('admin.index') }}">Menu</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('orders.index') }}">Orders</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/order-items') }}">Order Items</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/payments') }}">Payments</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/reviews') }}">Reviews</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/users') }}">Users</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/admin/admin-acc') }}">Admin</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('items.index') }}">Order Items</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('payments.index') }}">Payments</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('reviews.index') }}">Reviews</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.users.index') }}">Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.admin-acc') }}">Admin</a></li>
             </ul>
         </div>
     </nav>

@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OrderItem;
 use App\Models\Orders_Item;
+use App\Models\Menu;
+use App\Models\Orders;
+use App\Models\Users;
 use Illuminate\Http\Request;
 
-class OrderItemsController extends Controller
+class Orders_ItemController extends Controller
 {
     public function index()
     {
-        $items = Orders_Item::with('menu', 'orders')->get();
-        return response()->json($items);
+        $items = Orders_Item::with('menu', 'orders')->latest()->get();
+        return view('admin.order-items.view-orderitems', compact('items'));
     }
 
     public function store(Request $request)

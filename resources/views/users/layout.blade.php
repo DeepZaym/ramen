@@ -12,7 +12,10 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('menu') }}">menu</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('order') }}">Order</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('pembayaran') }}">Pembayaran</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('reitrai') }}">Registrasi</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
             </ul>
         </div>

@@ -13,8 +13,8 @@ class PaymentsController extends Controller
      */
     public function index()
     {
-        $payments = Payments::with('orders.users')->latest()->get();
-        return response()->json($payments);
+        $payments = Payments::with('orders')->latest()->get();
+        return view('admin.payments.view-payments', compact('payments'));
     }
 
     /**
@@ -29,8 +29,8 @@ class PaymentsController extends Controller
 
         $orders = Orders::findOrFail($request->orders_id);
 
-        if ($orders->payments) {
-            return response()->json(['message' => 'Pesanan ini sudah dibayar'], 400);
+        if ($orders->payment) {
+            return redirect()->back()->with('error', 'Pesanan ini sudah memiliki pembayaran.');
         }
 
         $payments = Payments::create([
@@ -40,9 +40,6 @@ class PaymentsController extends Controller
             'status_pembayaran' => $request->metode_pembayaran === 'cod' ? 'pending' : 'paid',
         ]);
 
-        return response()->json([
-            'message' => 'Pembayaran berhasil diproses',
-            'data' => $payments
-        ]);
+        return redirect()->back()->with('success', 'Pembayaran berhasil diproses.');
     }
 }
