@@ -14,10 +14,15 @@ class OrdersController extends Controller
      * Tampilkan semua pesanan (order).
      */
     public function index()
-    {
-        $orders = Orders::with('user')->latest()->get();
-        return view('admin.orders.view-orders', compact('orders'));
-    }
+{
+    $orders = \App\Models\Orders::with('user')
+        ->orderBy('orders_id', 'asc') // urut berdasarkan ID (kecil ke besar)
+        ->get();
+
+    return view('admin.orders.view-orders', compact('orders'));
+}
+
+
 
     public function pemesanan()
     {

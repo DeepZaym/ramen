@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -110,7 +111,7 @@ class UsersController extends Controller
 
     public function update(Request $request, $id) {
         $user = Users::findOrFail($id);
-        
+
         $request->validate([
             'users_nama' => 'required|string|max:255|unique:tb_users,users_nama,' . $id . ',users_id',
             'users_email' => 'required|email|unique:tb_users,users_email,' . $id . ',users_id',

@@ -26,7 +26,7 @@ Route::get('/Menu', [UsersController::class, 'menu'])->name('menu');
 
 // Order Page User
 Route::get('/order', [UsersController::class, 'statusmenu'])->name('order');
-Route::post('/order', [UsersController::class, 'order'])->name('submit');
+Route::post('/order', [UsersController::class, 'submitorder'])->name('submitorder');
 
 
 // login dan register user
@@ -51,8 +51,8 @@ Route::get('/admin', [AdminController::class, 'index'])->middleware(['auth', 've
 Route::get('/admin/login-admin', [AdminController::class, 'login'])->name('admin.login');
 
 // Route yang memerlukan autentikasi admin
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
-
+Route::middleware(['auth:admin'])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     // Halaman acc Admin
     Route::get('/admin-acc', [AdminController::class, 'adminAcc'])->name('admin.admin-acc');
     Route::get('/admin-acc/create', [AdminController::class, 'createAdmin'])->name('admin.create-admin');

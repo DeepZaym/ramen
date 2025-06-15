@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
+use App\Models\Users;
 
 use Illuminate\Support\Facades\Http;
 
@@ -40,17 +44,18 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'admins', // For admin authentication
-        ],
-
+        // Guard default Laravel untuk user
         'customers' => [
             'driver' => 'session',
-            'provider' => 'customers', // For customer authentication
+            'provider' => 'users',
+        ],
+
+        // Guard untuk admin
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admin',
         ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -69,14 +74,16 @@ return [
     */
 
     'providers' => [
-        'admins' => [
+        // Provider untuk user/customer
+        'users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Admin::class, // Admin model
+            'model' => \App\Models\Users::class,
         ],
 
-        'customers' => [
+        // Provider untuk admin
+        'admin' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Users::class, // Users model
+            'model' => \App\Models\Admin::class,
         ],
     ],
 
@@ -101,46 +108,20 @@ return [
 
     'passwords' => [
         'users' => [
-            'provider' => 'customers',
+            'provider' => 'users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
         ],
-        
-        'admins' => [
-            'provider' => 'admins',
+
+        'admin' => [
+            'provider' => 'admin',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
 
-    'guards' => [
-    // Guard default Laravel
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
-
-    // Tambahkan ini untuk guard tb_users
-    'customers' => [
-        'driver' => 'session',
-        'provider' => 'tb_users',
-    ],
-],
-
-'providers' => [
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => \App\Models\Users::class,
-    ],
-
-    // Tambahkan ini untuk provider tb_users
-    'tb_users' => [
-        'driver' => 'eloquent',
-        'model' => \App\Models\Users::class,
-    ],
-],
 
     /*
     |--------------------------------------------------------------------------

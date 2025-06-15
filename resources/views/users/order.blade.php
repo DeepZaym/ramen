@@ -552,7 +552,7 @@
       <button class="quantity-btn" onclick="updateQuantity({{ $m->menu_id }}, 1)">+</button>
     </div>
   </div>
-  <form method="POST" action="{{ route('submit') }}" onsubmit="return submitOrder(event)">
+  <form method="POST" action="{{ route('submitorder') }}" onsubmit="return submitOrder(event)">
   @csrf
   <input type="hidden" name="items" id="items-input">
   <input type="hidden" name="delivery_address" value="{{ $user->users_alamat }}">

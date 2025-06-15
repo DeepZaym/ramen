@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use App\Models\Users;
 use App\Models\Menu;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Orders;
+use App\Models\Orders_Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 
 use function Laravel\Prompts\alert;
 
@@ -107,35 +113,56 @@ class UsersController extends Controller
 }
 
 
-    public function order(Request $request)
+    public function submitorder(Request $request)
 {
-    $user = Auth::guard('customers')->user();
+    $user = Auth::user();
 
-    $items = json_decode($request->items, true);
+    // Decode items dari JSON string
+    $items = json_decode($request->input('items'), true);
 
-    $total = 0;
-    foreach ($items as $item) {
-        $menu = Menu::findOrFail($item['menu_id']);
-        $total += $menu->menu_harga * $item['quantity'];
+    if (!$items || !is_array($items)) {
+        return back()->with('error', 'Data item tidak valid.');
     }
 
-    $order = \App\Models\Orders::create([
-        'users_id' => $user->users_id,
-        'delivery_address' => $request->delivery_address,
-        'total_price' => $total,
-        'status' => 'pending',
-    ]);
-
+    // Hitung total harga
+    $total_price = 0;
     foreach ($items as $item) {
-        \App\Models\Orders_Item::create([
-            'orders_id' => $order->id,
-            'menu_id' => $item['menu_id'],
-            'quantity' => $item['quantity'],
-            'price' => Menu::find($item['menu_id'])->menu_harga,
+        $menu = Menu::find($item['menu_id']);
+        if ($menu) {
+            $total_price += $menu->harga * $item['quantity'];
+        }
+    }
+
+    DB::beginTransaction();
+    try {
+        // Buat order baru
+        $order = Orders::create([
+            'users_id' => $user->users_id,
+            'delivery_address' => $request->input('delivery_address'),
+            'total_price' => $total_price,
+            'status' => 'pending',
         ]);
-    }
 
-    return redirect()->route('order')->with('success', 'Pesanan berhasil dibuat!');
+        // Cek apakah berhasil membuat order
+        if (!$order || !$order->orders_id) {
+            throw new \Exception("Gagal menyimpan order.");
+        }
+
+        // Simpan item-item order
+        foreach ($items as $item) {
+            Orders_Item::create([
+                'orders_id' => $order->orders_id, // pastikan ini tidak NULL
+                'menu_id' => $item['menu_id'],
+                'quantity' => $item['quantity'],
+            ]);
+        }
+
+        DB::commit();
+        return redirect()->route('order.success')->with('success', 'Pesanan berhasil dibuat.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
 }
 
 
@@ -148,7 +175,7 @@ class UsersController extends Controller
     // CRUD methods untuk admin panel
     public function index() {
         $users = Users::all();
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.view-users', compact('users'));
     }
 
     public function create() {

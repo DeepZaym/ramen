@@ -36,7 +36,7 @@
                     <th>#</th>
                     <th>Nama</th>
                     <th>Email</th>
-                    <th>Email Verified</th>
+                    <th>Password</th>
                     <th>Dibuat</th>
                     <th>Diubah</th>
                     <th>Aksi</th>
@@ -48,7 +48,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $admin->nama ?? $admin->name }}</td>
                         <td>{{ $admin->email }}</td>
-                        <td>{{ $admin->email_verified_at ?? '-' }}</td>
+                        <td>{{ $admin->password }}</td>
                         <td>{{ $admin->created_at }}</td>
                         <td>{{ $admin->updated_at }}</td>
                         <td>
