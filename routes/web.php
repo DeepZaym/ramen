@@ -23,12 +23,11 @@ Route::get('/', [UsersController::class, 'landing'])->name('landing');
 // menu page user
 Route::get('/Menu', [UsersController::class, 'menu'])->name('menu');
 
-// Order Page User
-Route::get('/order', [UsersController::class, 'pembayaran'])->name('order');
-Route::post('/order', [UsersController::class, 'pembayaran'])->name('submit');
 
-// pembayaran
-Route::get('/pembayaran', [UsersController::class, 'pembayaran'])->name('pembayaran');
+// Order Page User
+Route::get('/order', [UsersController::class, 'statusmenu'])->name('order');
+Route::post('/order', [UsersController::class, 'order'])->name('submit');
+
 
 // login dan register user
 

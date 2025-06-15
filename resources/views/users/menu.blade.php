@@ -1,3 +1,5 @@
+@extends('layouts.layout')
+@section('content')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -388,21 +390,6 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="nav-container">
-            <a href="#" class="logo">RamenRush</a>
-            <nav>
-                <ul class="nav-menu">
-                <li><a href="{{ route('landing') }}">Home</a></li>
-                <li><a href="{{ route('menu') }}">Menu</a></li>
-                <li><a href="{{ route('order') }}">Order</a></li>
-                <li><a href="{{ route('pembayaran') }}">Pembayaran</a></li>
-                <li><a href="#  ">Kontak</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
     <main class="main-content">
         <h1 class="page-title">Mie Ramen</h1>
         <p class="page-subtitle">Authentic Japanese Ramen - Crafted with Love and Tradition</p>

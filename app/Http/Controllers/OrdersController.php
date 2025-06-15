@@ -19,6 +19,15 @@ class OrdersController extends Controller
         return view('admin.orders.view-orders', compact('orders'));
     }
 
+    public function pemesanan()
+    {
+        // Ambil hanya menu yang status-nya aktif dan stok-nya tersedia
+        $menus = Menu::where('status', 'aktif')->where('stok', '>', 0)->get();
+
+        return response()->json($menus);
+    }
+
+
     /**
      * Simpan pesanan baru.
      */

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Session;
 use App\Models\Users;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -97,6 +98,47 @@ class UsersController extends Controller
     public function menu() {
         return view('users.menu');
     }
+
+    public function statusmenu()
+{
+    $menus = Menu::where('status','tersedia')->where('stok','>',0)->get();
+    $user = Auth::guard('customers')->user(); // ambil user yang sedang login
+    return view('users.order', compact('menus', 'user'));
+}
+
+
+    public function order(Request $request)
+{
+    $user = Auth::guard('customers')->user();
+
+    $items = json_decode($request->items, true);
+
+    $total = 0;
+    foreach ($items as $item) {
+        $menu = Menu::findOrFail($item['menu_id']);
+        $total += $menu->menu_harga * $item['quantity'];
+    }
+
+    $order = \App\Models\Orders::create([
+        'users_id' => $user->users_id,
+        'delivery_address' => $request->delivery_address,
+        'total_price' => $total,
+        'status' => 'pending',
+    ]);
+
+    foreach ($items as $item) {
+        \App\Models\Orders_Item::create([
+            'orders_id' => $order->id,
+            'menu_id' => $item['menu_id'],
+            'quantity' => $item['quantity'],
+            'price' => Menu::find($item['menu_id'])->menu_harga,
+        ]);
+    }
+
+    return redirect()->route('order')->with('success', 'Pesanan berhasil dibuat!');
+}
+
+
 
     // Pembayaran method
     public function pembayaran() {

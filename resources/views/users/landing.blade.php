@@ -1,3 +1,5 @@
+@extends('layouts.layout')
+@section('content')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -280,65 +282,6 @@
     </style>
 </head>
 <body>
-    <header class="header">
-    <div class="nav-container">
-        <a href="#" class="logo">RamenRush</a>
-
-        <nav>
-            <ul class="nav-menu">
-                <li><a href="{{ route('landing') }}">Home</a></li>
-                <li><a href="{{ route('menu') }}">Menu</a></li>
-                <li><a href="{{ route('order') }}">Order</a></li>
-                <li><a href="{{ route('pembayaran') }}">Pembayaran</a></li>
-@auth
-@if($tb_users)
-    <!-- Display welcome message for logged-in users -->
-    @if(Auth::check())
-        <p>Selamat datang, {{ Auth::user()->name }}!</p>
-    @else
-        <p>Silakan login terlebih dahulu.</p>
-    @endif
-@endauth
-                        <!-- User is logged in -->
-                        <li class="user-dropdown">
-                            <div class="user-profile">
-                                <div class="user-avatar">
-                                    {{ strtoupper(substr($tb_users['users_nama'], 0, 2)) }}
-                                </div>
-                                <span>{{ $tb_users['users_nama'] }}</span>
-                                <div class="dropdown-menu">
-                                    <div class="user-info">
-                                        <strong>{{ $tb_users['users_nama'] }}</strong><br>
-                                        {{ $tb_users['users_email'] }}<br>
-                                        {{ Str::limit($tb_users['users_alamat'], 30) }}
-                                    </div>
-                                    <a href="#" onclick="showUserProfile()">Detail Profile</a>
-                                    <a href="{{ route('order') }}">Riwayat Order</a>
-                                    <button type="button" onclick="confirmLogout()">Logout</button>
-                                </div>
-                            </div>
-                        </li>
-
-                        <!-- Logout Form -->
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="logout-form">
-                            @csrf
-                        </form>
-                    @else
-                        <!-- User is not logged in -->
-                        <li><a href="{{ route('registrasiForm') }}">Register</a></li>
-                        <li><a href="{{ route('loginForm') }}">Login</a></li>
-                    @endif
-
-                    <li><a href="#">Kontak</a></li>
-                </ul>
-
-        </nav>
-
-
-    </div>
-</header>
-
-
     <section class="hero">
         <!-- Floating Food Elements -->
         <div class="food-element sushi-1"></div>
@@ -400,3 +343,4 @@
     </script>
 </body>
 </html>
+@endsection
